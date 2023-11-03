@@ -4,58 +4,113 @@ import csv
 
 from kernels import *
 
-# CGRA from left to right, top to bottom
-N_ROWS      = 4
-N_COLS      = 4
-INSTR_SIZE  = N_ROWS+1
-MAX_COL     = N_COLS - 1
-MAX_ROW     = N_ROWS - 1
+# CGRA top-level parameters
+N_ROW      = 4
+N_COL      = 2
+N_VWR_PER_COL = 3
 
-PRINT_OUTS  = 1
+# Local data register (DREG) sizes of specialized slots
+RC_NUM_DREG = 2
 
-MAX_32b = 0xFFFFFFFF
+# Configuration register (CREG) / instruction memory sizes of specialized slots
+RC_NUM_CREG = 64
+KER_CONF_N_REG = 16
+IMEM_N_LINES = 512
+
+# Widths of instruction memories of each specialized slot in bits
+KER_CONF_IMEM_WIDTH = 21
+LCU_IMEM_WIDTH = 20
+LSU_IMEM_WIDTH = 20
+RC_IMEM_WIDTH = 18
+MXCU_IMEM_WIDTH = 27
+
+# Scratchpad memory configuration
+SP_NWORDS = 128
+SP_NLINES = 64
 
 
-srcs    = ['ZERO', 'SELF', 'RCL', 'RCR', 'RCT', 'RCB',  'R0', 'R1', 'R2', 'R3', 'IMM']
-dsts    = ['SELF', 'RCL', 'RCR', 'RCT', 'RCB','R0', 'R1', 'R2', 'R3']
-regs    = dsts[-4:]
+#### SPECIALIZED SLOTS: Sub-modules of the VWR2A top module that each perform their own purpos and have their own ISA ######
 
-class INSTR:
-    def __init__( self,matrix):
-        self.time = matrix[0][0]                        # ToDo: Fix how we assign this length
-        self.ops = [[ matrix[r+1][c] for c in range(N_COLS)] for r in range(N_ROWS)]
+# KERNEL CONFIGURATION #
+class KER_CONF:
+    '''Kernel memory: Keeps track of which kernels are loaded into the IMEM of VWR2A'''
+    def __init__(self):
+        self.IMEM = np.zeros(KER_CONF_N_REG,dtype="S{0}".format(KER_CONF_IMEM_WIDTH))
+        # Initialize kernel memory with zeros
+        for i, instruction in enumerate(self.IMEM):
+            self.IMEM[i] = np.binary_repr(0,width=KER_CONF_IMEM_WIDTH)
+    
+    def set_kernel_word(self, kmem_word, pos):
+        '''Set the IMEM index at integer pos to the binary kmem word'''
+        self.IMEM[pos] = np.binary_repr(kmem_word,width=KER_CONF_IMEM_WIDTH)
+    
+    def set_kernel_params(self, num_instructions, imem_add_start, column_usage, srf_spm_addres, pos):
+        '''Set the IMEM index at integer pos to the configuration parameters.
+        See KMEM_WORD initializer for implementation details.
+        '''
+        kmem_word = KMEM_WORD(num_instructions, imem_add_start, column_usage, srf_spm_addres)
+        self.IMEM[pos] = kmem_word.get_word()
+    
+    def get_kernel_info(self, pos):
+        '''Get the kernel implementation details at position pos in the kernel memory'''
+        kmem_word = KMEM_WORD()
+        kmem_word.set_word(self.IMEM[pos])
+        n_instr, imem_add, col, spm_add = kmem_word.decode_word()
+        if col == 1:
+            col_disp = 0
+        elif col == 2:
+            col_disp = 1
+        elif col == 3:
+            col_disp = "both"
+        print("This kernel uses {0} instruction words starting at IMEM address {1}.\nIt uses column(s): {2}.\nThe SRF is located in SPM bank {3}.".format(n_instr, imem_add, col_disp, spm_add))
+        
+    def get_word_in_hex(self, pos):
+        '''Get the hexadecimal representation of the word at index pos in the kernel config IMEM'''
+        return(hex(int(self.IMEM[pos],2)))
+        
+    
+        
+class KMEM_WORD:
+    def __init__(self, num_instructions=0, imem_add_start=0, column_usage=0, srf_spm_addres=0):
+        '''Generate a binary kmem instruction word from its configuration paramerers:
+        
+           -   num_instructions: number of IMEM lines the kernel occupies (0 to 63)
+           -   imem_add_start: start address of the kernel in IMEM (0 to 511)
+           -   column_usage: integrer representing one-hot column usage of the kernel:
+               -    1 for column 0
+               -    2 for column 1
+               -    3 for both columns
+           -   srf_spm_address: address of SPM that SRF occupies (0 to 15)
+        
+        '''
+        self.num_instructions = np.binary_repr(num_instructions, width=6)
+        self.imem_add_start = np.binary_repr(imem_add_start, width=9)
+        self.column_usage = np.binary_repr(column_usage,width=2)
+        self.srf_spm_addres = np.binary_repr(srf_spm_addres,4)
+        self.word = "".join((self.srf_spm_addres,self.column_usage,self.imem_add_start,self.num_instructions))
+    
+    def get_word(self):
+        return self.word
+    
+    def set_word(self, word):
+        '''Set the binary configuration word of the kernel memory'''
+        self.word = word
+        self.num_instructions = word[15:]
+        self.imem_add_start = word[6:15]
+        self.column_usage = word[4:6]
+        self.srf_spm_addres = word[0:4]
+        
+    
+    def decode_word(self):
+        '''Get the configuration word parameters from the binary word'''
+        n_instr = int(self.num_instructions, 2)
+        imem_add = int(self.imem_add_start ,2)
+        col = int(self.column_usage, 2)
+        spm_add = int(self.srf_spm_addres, 2)
+        
+        return n_instr, imem_add, col, spm_add
 
-def ker_parse( data ):
-    instrs = int(len(data)/( INSTR_SIZE  )) # Always have a CSV with as many csv-columns as CGA-columns. Each instruction starts with the instruction timestamp i nthe first column. The next instruction must be immediately after the last row of this instruction.
-    return [ INSTR( data[r_i*INSTR_SIZE:(r_i+1)*INSTR_SIZE][0:] ) for r_i in range(instrs) ]
-
-
-def print_out( prs, outs, insts, ops, reg ):
-    if PRINT_OUTS:
-        out_string = ""
-
-        if type(prs) == str:
-            prs = [prs]
-
-        for pr in prs:
-            pnt = []
-            if      pr == "ROUT" : pnt = outs
-            elif    pr == "INST" : pnt = insts
-            elif    pr == "OPS"  : pnt = ops
-            elif    pr == "R0"   : pnt = reg[0]
-            elif    pr == "R1"   : pnt = reg[1]
-            elif    pr == "R2"   : pnt = reg[2]
-            elif    pr == "R3"   : pnt = reg[3]
-
-            out_string += "["
-            for i in range(len(pnt)):
-                out_string += "{{{}:4}}".format(i)
-                if i == (len(pnt) - 1):
-                    out_string += "]    "
-                else:
-                    out_string += ", "
-            out_string = out_string.format(*[o for o in pnt])
-        print(out_string)
+# LOAD-STORE UNIT (LSU) #
 
 
 class CGRA:
