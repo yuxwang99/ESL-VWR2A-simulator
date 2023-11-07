@@ -15,12 +15,10 @@ RC_NUM_DREG = 2
 
 # Configuration register (CREG) / instruction memory sizes of specialized slots
 RC_NUM_CREG = 64
-MXCU_NUM_CREG = 64
 IMEM_N_LINES = 512
 
 # Widths of instruction memories of each specialized slot in bits
 RC_IMEM_WIDTH = 18
-MXCU_IMEM_WIDTH = 27
 
 # Scratchpad memory configuration
 SP_NWORDS = 128

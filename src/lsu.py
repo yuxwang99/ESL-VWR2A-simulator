@@ -149,9 +149,9 @@ class LSU_IMEM:
         print("Performing ALU operation {0} between operands {1} and {2}".format(alu_opcode, muxa_res, muxb_res))
         
         if rf_we == 1:
-            print("Writing ALU result to LCU register {0}".format(rf_wsel))
+            print("Writing ALU result to LSU register {0}".format(rf_wsel))
         else:
-            print("No LCU registers are being written")
+            print("No LSU registers are being written")
         
         
     def get_word_in_hex(self, pos):
@@ -161,10 +161,10 @@ class LSU_IMEM:
     
         
 class LSU_IMEM_WORD:
-    def __init__(self, rf_wsel=0, rf_we=0, alu_op=0, muxb_sel=9, muxa_sel=9, vwr_shuf_op=0, vwr_shuf_sel=0):
+    def __init__(self, rf_wsel=0, rf_we=0, alu_op=0, muxb_sel=LSU_MUXB_SEL.ZERO, muxa_sel=LSU_MUXA_SEL.ZERO, vwr_shuf_op=0, vwr_shuf_sel=0):
         '''Generate a binary lsu instruction word from its configuration paramerers:
         
-           -   rf_wsel: Select one of four LSU registers to write to
+           -   rf_wsel: Select one of eight LSU registers to write to
            -   rf_we: Enable writing to aforementioned register
            -   alu_op: Perform one of the ALU operations listed in the LSU_ALU_OPS enum
            -   muxb_sel: Select input B to ALU (see LSU_MUXB_SEL enum for options)
