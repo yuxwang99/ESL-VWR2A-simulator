@@ -119,7 +119,7 @@ class MXCU_IMEM:
                     spec_slot = alu_res.name
             print("Writing from {0} ALU to SRF register {1}".format(spec_slot, srf_sel))
         else:
-            print("Not writing to the SRF")
+            print("Reading from SRF index {0}".format(srf_sel))
         
         for op in MXCU_ALU_OPS:
             if op.value == alu_op:

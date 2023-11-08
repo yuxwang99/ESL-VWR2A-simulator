@@ -10,15 +10,8 @@ N_ROW      = 4
 N_COL      = 2
 N_VWR_PER_COL = 3
 
-# Local data register (DREG) sizes of specialized slots
-RC_NUM_DREG = 2
-
 # Configuration register (CREG) / instruction memory sizes of specialized slots
-RC_NUM_CREG = 64
 IMEM_N_LINES = 512
-
-# Widths of instruction memories of each specialized slot in bits
-RC_IMEM_WIDTH = 18
 
 # Scratchpad memory configuration
 SP_NWORDS = 128
