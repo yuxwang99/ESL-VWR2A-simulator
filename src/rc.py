@@ -108,7 +108,7 @@ class RC_IMEM:
             precision = "32-bit"
         else:
             precision = "16-bit"
-        print("ALU is performing operations with {0} precision".format(precision))
+        
         
         for op in RC_ALU_OPS:
             if op.value == alu_op:
@@ -131,6 +131,7 @@ class RC_IMEM:
             print("Output {0} if zero flag of {1} == 1, else output {2}".format(muxa_res, muxf_res, muxb_res))
         else:
             print("Performing ALU operation {0} between operands {1} and {2}".format(alu_opcode, muxa_res, muxb_res))
+            print("ALU is performing operations with {0} precision".format(precision))
         
         if rf_we == 1:
             print("Writing ALU result to RC register {0}".format(rf_wsel))

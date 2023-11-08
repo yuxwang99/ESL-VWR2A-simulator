@@ -51,4 +51,20 @@ class IMEM:
             self.lsu_imem.set_word(int(self.instr_df.loc[index].LSU,16),index)
             self.lcu_imem.set_word(int(self.instr_df.loc[index].LCU,16),index)
             self.mxcu_imem.set_word(int(self.instr_df.loc[index].MXCU,16),index)
+            
+    def get_clock_cycle_summary(self, clk_cycle=0):
+        print("****RC0****")
+        self.rc0_imem.get_instruction_info(clk_cycle)
+        print("****RC1****")
+        self.rc1_imem.get_instruction_info(clk_cycle)
+        print("****RC2****")
+        self.rc2_imem.get_instruction_info(clk_cycle)
+        print("****RC3****")
+        self.rc3_imem.get_instruction_info(clk_cycle)
+        print("****LSU****")
+        self.lsu_imem.get_instruction_info(clk_cycle)
+        print("****LCU****")
+        self.lcu_imem.get_instruction_info(clk_cycle)
+        print("****MXCU****")
+        self.mxcu_imem.get_instruction_info(clk_cycle)
         
