@@ -19,16 +19,25 @@ class KER_CONF:
         for i, instruction in enumerate(self.IMEM):
             self.IMEM[i] = np.binary_repr(0,width=KER_CONF_IMEM_WIDTH)
     
-    def set_kernel_word(self, kmem_word, pos):
+    def set_word(self, kmem_word, pos):
         '''Set the IMEM index at integer pos to the binary kmem word'''
         self.IMEM[pos] = np.binary_repr(kmem_word,width=KER_CONF_IMEM_WIDTH)
     
-    def set_kernel_params(self, num_instructions, imem_add_start, column_usage, srf_spm_addres, pos):
+    def set_params(self, num_instructions, imem_add_start, column_usage, srf_spm_addres, pos):
         '''Set the IMEM index at integer pos to the configuration parameters.
         See KMEM_WORD initializer for implementation details.
         '''
+        assert (num_instructions>0) & (num_instructions<64), "Invalid kernel; number of instructions is either negative or too big"
+        
         kmem_word = KMEM_WORD(num_instructions, imem_add_start, column_usage, srf_spm_addres)
         self.IMEM[pos] = kmem_word.get_word()
+    
+    def get_params(self, pos):
+        '''Get the kernel parameters at position pos in the kernel memory'''
+        kmem_word = KMEM_WORD()
+        kmem_word.set_word(self.IMEM[pos])
+        n_instr, imem_add, col, spm_add = kmem_word.decode_word()
+        return n_instr, imem_add, col, spm_add
     
     def get_kernel_info(self, pos):
         '''Get the kernel implementation details at position pos in the kernel memory'''

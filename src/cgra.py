@@ -10,9 +10,6 @@ N_ROW      = 4
 N_COL      = 2
 N_VWR_PER_COL = 3
 
-# Configuration register (CREG) / instruction memory sizes of specialized slots
-IMEM_N_LINES = 512
-
 # Scratchpad memory configuration
 SP_NWORDS = 128
 SP_NLINES = 64

@@ -87,15 +87,16 @@ class LSU_IMEM:
     '''Instruction memory of the Load Store Unit'''
     def __init__(self):
         self.IMEM = np.zeros(LSU_NUM_CREG,dtype="S{0}".format(LSU_IMEM_WIDTH))
-        # Initialize kernel memory with zeros
+        # Initialize kernel memory with default instruction
+        default_word = LSU_IMEM_WORD()
         for i, instruction in enumerate(self.IMEM):
-            self.IMEM[i] = np.binary_repr(0,width=LSU_IMEM_WIDTH)
+            self.IMEM[i] = default_word.get_word()
     
-    def set_kernel_word(self, kmem_word, pos):
+    def set_word(self, kmem_word, pos):
         '''Set the IMEM index at integer pos to the binary imem word'''
         self.IMEM[pos] = np.binary_repr(kmem_word,width=LSU_IMEM_WIDTH)
     
-    def set_kernel_params(self, rf_wsel, rf_we, alu_op, muxb_sel, muxa_sel, vwr_shuf_op, vwr_shuf_sel, pos):
+    def set_params(self, rf_wsel, rf_we, alu_op, muxb_sel, muxa_sel, vwr_shuf_op, vwr_shuf_sel, pos):
         '''Set the IMEM index at integer pos to the configuration parameters.
         See LSU_IMEM_WORD initializer for implementation details.
         '''

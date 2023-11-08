@@ -61,15 +61,16 @@ class LCU_IMEM:
     '''Instruction memory of the Loop Control Unit'''
     def __init__(self):
         self.IMEM = np.zeros(LCU_NUM_CREG,dtype="S{0}".format(LCU_IMEM_WIDTH))
-        # Initialize kernel memory with zeros
+        # Initialize kernel memory with default instruction
+        default_word = LCU_IMEM_WORD()
         for i, instruction in enumerate(self.IMEM):
-            self.IMEM[i] = np.binary_repr(0,width=LCU_IMEM_WIDTH)
+            self.IMEM[i] = default_word.get_word()
     
-    def set_kernel_word(self, kmem_word, pos):
+    def set_word(self, kmem_word, pos):
         '''Set the IMEM index at integer pos to the binary imem word'''
         self.IMEM[pos] = np.binary_repr(kmem_word,width=LCU_IMEM_WIDTH)
     
-    def set_kernel_params(self, imm, rf_wsel, rf_we, alu_op, br_mode, muxb_sel, muxa_sel, pos):
+    def set_params(self, imm, rf_wsel, rf_we, alu_op, br_mode, muxb_sel, muxa_sel, pos):
         '''Set the IMEM index at integer pos to the configuration parameters.
         See LCU_IMEM_WORD initializer for implementation details.
         '''

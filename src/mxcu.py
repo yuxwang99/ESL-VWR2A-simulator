@@ -80,15 +80,16 @@ class MXCU_IMEM:
     '''Instruction memory of the Multiplexer control unit'''
     def __init__(self):
         self.IMEM = np.zeros(MXCU_NUM_CREG,dtype="S{0}".format(MXCU_IMEM_WIDTH))
-        # Initialize kernel memory with zeros
+        # Initialize kernel memory with default word
+        default_word = MXCU_IMEM_WORD()
         for i, instruction in enumerate(self.IMEM):
-            self.IMEM[i] = np.binary_repr(0,width=MXCU_IMEM_WIDTH)
+            self.IMEM[i] = default_word.get_word()
     
-    def set_kernel_word(self, kmem_word, pos):
+    def set_word(self, kmem_word, pos):
         '''Set the IMEM index at integer pos to the binary imem word'''
         self.IMEM[pos] = np.binary_repr(kmem_word,width=MXCU_IMEM_WIDTH)
     
-    def set_kernel_params(self, vwr_row_we, vwr_sel, srf_sel, alu_srf_write, srf_we, rf_wsel, rf_we, alu_op, muxb_sel, muxa_sel, pos):
+    def set_params(self, vwr_row_we, vwr_sel, srf_sel, alu_srf_write, srf_we, rf_wsel, rf_we, alu_op, muxb_sel, muxa_sel, pos):
         '''Set the IMEM index at integer pos to the configuration parameters.
         See MXCU_IMEM_WORD initializer for implementation details.
         NOTE: vwr_row_we should be an 4-element array of bool/int values representing a one-hot vector of row write enable bits
