@@ -41,30 +41,71 @@ class IMEM:
         # Decode kernel instructions
         n_instr, imem_add, col, spm_add = self.kmem.get_params(kernel_pos)
         
-        assert (n_instr>0) & (n_instr<RC_NUM_CREG), "Invalid kernel; number of instructions is either negative or too big"
+        assert (n_instr>=0) & (n_instr<RC_NUM_CREG), "Invalid kernel; number of instructions is either negative or too big"
 
-        for index in range(imem_add,imem_add+n_instr+1):
-            self.rc0_imem.set_word(int(self.instr_df.loc[index].RC0,16),index)
-            self.rc1_imem.set_word(int(self.instr_df.loc[index].RC1,16),index)
-            self.rc2_imem.set_word(int(self.instr_df.loc[index].RC2,16),index)
-            self.rc3_imem.set_word(int(self.instr_df.loc[index].RC3,16),index)
-            self.lsu_imem.set_word(int(self.instr_df.loc[index].LSU,16),index)
-            self.lcu_imem.set_word(int(self.instr_df.loc[index].LCU,16),index)
-            self.mxcu_imem.set_word(int(self.instr_df.loc[index].MXCU,16),index)
+        for index in range(n_instr+1):
+            self.rc0_imem.set_word(int(self.instr_df.loc[index+imem_add].RC0,16),index)
+            self.rc1_imem.set_word(int(self.instr_df.loc[index+imem_add].RC1,16),index)
+            self.rc2_imem.set_word(int(self.instr_df.loc[index+imem_add].RC2,16),index)
+            self.rc3_imem.set_word(int(self.instr_df.loc[index+imem_add].RC3,16),index)
+            self.lsu_imem.set_word(int(self.instr_df.loc[index+imem_add].LSU,16),index)
+            self.lcu_imem.set_word(int(self.instr_df.loc[index+imem_add].LCU,16),index)
+            self.mxcu_imem.set_word(int(self.instr_df.loc[index+imem_add].MXCU,16),index)
             
-    def get_clock_cycle_summary(self, clk_cycle=0):
+    def get_pos_summary(self, imem_pos=0):
+        '''Print what is going on in every specialized slot at a given position in the instruction memory'''
         print("****RC0****")
-        self.rc0_imem.get_instruction_info(clk_cycle)
+        self.rc0_imem.get_instruction_info(imem_pos)
         print("****RC1****")
-        self.rc1_imem.get_instruction_info(clk_cycle)
+        self.rc1_imem.get_instruction_info(imem_pos)
         print("****RC2****")
-        self.rc2_imem.get_instruction_info(clk_cycle)
+        self.rc2_imem.get_instruction_info(imem_pos)
         print("****RC3****")
-        self.rc3_imem.get_instruction_info(clk_cycle)
+        self.rc3_imem.get_instruction_info(imem_pos)
         print("****LSU****")
-        self.lsu_imem.get_instruction_info(clk_cycle)
+        self.lsu_imem.get_instruction_info(imem_pos)
         print("****LCU****")
-        self.lcu_imem.get_instruction_info(clk_cycle)
+        self.lcu_imem.get_instruction_info(imem_pos)
         print("****MXCU****")
-        self.mxcu_imem.get_instruction_info(clk_cycle)
+        self.mxcu_imem.get_instruction_info(imem_pos)
+    
+    def get_df(self):
+        '''Interate through all kernels and generate a pandas DateFrame with all of the hex instructions, which can then be loaded into a VWR2A testbench'''
+        
+        df_out = pd.DataFrame(columns=['LCU', 'LSU', 'MXCU', 'RC0', 'RC1', 'RC2', 'RC3', 'KMEM'])
+        
+        # Fill with default instructions
+        default_RC_word = hex(int(RC_IMEM_WORD().get_word(),2))
+        default_LSU_word = hex(int(LSU_IMEM_WORD().get_word(),2))
+        default_LCU_word = hex(int(LCU_IMEM_WORD().get_word(),2))
+        default_MXCU_word = hex(int(MXCU_IMEM_WORD().get_word(),2))
+        default_kernel_word = hex(int(KMEM_WORD().get_word(),2))
+
+        df_out.RC0 = np.tile(default_RC_word,IMEM_N_LINES)
+        df_out.RC1 = np.tile(default_RC_word,IMEM_N_LINES)
+        df_out.RC2 = np.tile(default_RC_word,IMEM_N_LINES)
+        df_out.RC3 = np.tile(default_RC_word,IMEM_N_LINES)
+        df_out.LSU = np.tile(default_LSU_word,IMEM_N_LINES)
+        df_out.LCU = np.tile(default_LCU_word,IMEM_N_LINES)
+        df_out.MXCU = np.tile(default_MXCU_word,IMEM_N_LINES)
+        
+        # For each kernel, populate the DataFrame with hex instructions corresponding to the imem words at the desired positions
+        for kernel_idx in range(KER_CONF_N_REG):
+            n_instr, imem_add, col, spm_add = self.kmem.get_params(kernel_idx)
+            if n_instr > 0:
+                df_out.KMEM.iloc[kernel_idx] = self.kmem.get_word_in_hex(kernel_idx)
+                for idx in range(n_instr + 1):
+                    df_out.RC0.iloc[idx+imem_add] = self.rc0_imem.get_word_in_hex(idx)
+                    df_out.RC1.iloc[idx+imem_add] = self.rc1_imem.get_word_in_hex(idx)
+                    df_out.RC2.iloc[idx+imem_add] = self.rc2_imem.get_word_in_hex(idx)
+                    df_out.RC3.iloc[idx+imem_add] = self.rc3_imem.get_word_in_hex(idx)
+                    df_out.LCU.iloc[idx+imem_add] = self.lcu_imem.get_word_in_hex(idx)
+                    df_out.LSU.iloc[idx+imem_add] = self.lsu_imem.get_word_in_hex(idx)
+                    df_out.MXCU.iloc[idx+imem_add] = self.mxcu_imem.get_word_in_hex(idx)
+            else: 
+                df_out.KMEM.iloc[kernel_idx] = default_kernel_word
+        
+        return df_out
+        
+        
         
