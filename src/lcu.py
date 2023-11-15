@@ -70,7 +70,7 @@ class LCU_IMEM:
         '''Set the IMEM index at integer pos to the binary imem word'''
         self.IMEM[pos] = np.binary_repr(kmem_word,width=LCU_IMEM_WIDTH)
     
-    def set_params(self, imm, rf_wsel, rf_we, alu_op, br_mode, muxb_sel, muxa_sel, pos):
+    def set_params(self, imm=0, rf_wsel=0, rf_we=0, alu_op=LCU_ALU_OPS.NOP, br_mode=0, muxb_sel=LCU_MUXB_SEL.R0, muxa_sel=LCU_MUXB_SEL.R0, pos=0):
         '''Set the IMEM index at integer pos to the configuration parameters.
         See LCU_IMEM_WORD initializer for implementation details.
         '''

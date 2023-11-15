@@ -29,7 +29,10 @@ class KER_CONF:
         '''
         assert (num_instructions>0) & (num_instructions<64), "Invalid kernel; number of instructions is either negative or too big"
         
-        kmem_word = KMEM_WORD(num_instructions, imem_add_start, column_usage, srf_spm_addres)
+        # Note: The number of instructions encoded in the kmem word is always one less than the actual number of instructions
+        n_instr_kmem = num_instructions-1
+        
+        kmem_word = KMEM_WORD(n_instr_kmem, imem_add_start, column_usage, srf_spm_addres)
         self.IMEM[pos] = kmem_word.get_word()
     
     def get_params(self, pos):
@@ -44,6 +47,10 @@ class KER_CONF:
         kmem_word = KMEM_WORD()
         kmem_word.set_word(self.IMEM[pos])
         n_instr, imem_add, col, spm_add = kmem_word.decode_word()
+        
+        # Note: The number of instructions encoded in the kmem word is always one less than the actual number of instructions
+        n_instr += 1
+        
         if col == 1:
             col_disp = 0
         elif col == 2:

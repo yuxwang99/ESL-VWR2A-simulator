@@ -92,7 +92,7 @@ class IMEM:
         # For each kernel, populate the DataFrame with hex instructions corresponding to the imem words at the desired positions
         for kernel_idx in range(KER_CONF_N_REG):
             n_instr, imem_add, col, spm_add = self.kmem.get_params(kernel_idx)
-            if n_instr > 0:
+            if col > 0:
                 df_out.KMEM.iloc[kernel_idx] = self.kmem.get_word_in_hex(kernel_idx)
                 for idx in range(n_instr + 1):
                     df_out.RC0.iloc[idx+imem_add] = self.rc0_imem.get_word_in_hex(idx)
