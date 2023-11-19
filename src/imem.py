@@ -33,7 +33,7 @@ class IMEM:
         
         if instr_df is not None:
             # Load kernel configuration into KMEM
-            for i in range(KER_CONF_N_REG):
+            for i in range(1,KER_CONF_N_REG):
                 self.kmem.set_word(int(self.instr_df.loc[i].KMEM,16),i)
     
     def load_kernel(self, kernel_pos=0):

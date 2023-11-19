@@ -96,7 +96,7 @@ class LSU_IMEM:
         '''Set the IMEM index at integer pos to the binary imem word'''
         self.IMEM[pos] = np.binary_repr(kmem_word,width=LSU_IMEM_WIDTH)
     
-    def set_params(self, rf_wsel, rf_we, alu_op, muxb_sel, muxa_sel, vwr_shuf_op, vwr_shuf_sel, pos):
+    def set_params(self, rf_wsel=0, rf_we=0, alu_op=LSU_ALU_OPS.LAND, muxb_sel=LSU_MUXB_SEL.ZERO, muxa_sel=LSU_MUXA_SEL.ZERO, vwr_shuf_op=LSU_VWR_SEL.VWR_A, vwr_shuf_sel=LSU_OP_MODE.NOP, pos=0):
         '''Set the IMEM index at integer pos to the configuration parameters.
         See LSU_IMEM_WORD initializer for implementation details.
         '''
@@ -162,7 +162,7 @@ class LSU_IMEM:
     
         
 class LSU_IMEM_WORD:
-    def __init__(self, rf_wsel=0, rf_we=0, alu_op=0, muxb_sel=LSU_MUXB_SEL.ZERO, muxa_sel=LSU_MUXA_SEL.ZERO, vwr_shuf_op=0, vwr_shuf_sel=0):
+    def __init__(self, rf_wsel=0, rf_we=0, alu_op=LSU_ALU_OPS.LAND, muxb_sel=LSU_MUXB_SEL.ZERO, muxa_sel=LSU_MUXA_SEL.ZERO, vwr_shuf_op=LSU_VWR_SEL.VWR_A, vwr_shuf_sel=LSU_OP_MODE.NOP):
         '''Generate a binary lsu instruction word from its configuration paramerers:
         
            -   rf_wsel: Select one of eight LSU registers to write to

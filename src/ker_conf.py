@@ -21,12 +21,16 @@ class KER_CONF:
     
     def set_word(self, kmem_word, pos):
         '''Set the IMEM index at integer pos to the binary kmem word'''
+        assert (pos>0), "Kernel word 0 is reserved; need to pick a position >0 and <16"
+        
         self.IMEM[pos] = np.binary_repr(kmem_word,width=KER_CONF_IMEM_WIDTH)
     
-    def set_params(self, num_instructions, imem_add_start, column_usage, srf_spm_addres, pos):
+    def set_params(self, num_instructions=0, imem_add_start=0, column_usage=0, srf_spm_addres=0, pos=1):
         '''Set the IMEM index at integer pos to the configuration parameters.
         See KMEM_WORD initializer for implementation details.
         '''
+        
+        assert (pos>0), "Kernel word 0 is reserved; need to pick a position >0 and <16"
         assert (num_instructions>0) & (num_instructions<64), "Invalid kernel; number of instructions is either negative or too big"
         
         # Note: The number of instructions encoded in the kmem word is always one less than the actual number of instructions

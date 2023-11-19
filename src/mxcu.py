@@ -89,7 +89,7 @@ class MXCU_IMEM:
         '''Set the IMEM index at integer pos to the binary imem word'''
         self.IMEM[pos] = np.binary_repr(kmem_word,width=MXCU_IMEM_WIDTH)
     
-    def set_params(self, vwr_row_we, vwr_sel, srf_sel, alu_srf_write, srf_we, rf_wsel, rf_we, alu_op, muxb_sel, muxa_sel, pos):
+    def set_params(self, vwr_row_we=[0,0,0,0], vwr_sel=MXCU_VWR_SEL.VWR_A, srf_sel=0, alu_srf_write=ALU_SRF_WRITE.LCU, srf_we=0, rf_wsel=0, rf_we=0, alu_op=MXCU_ALU_OPS.NOP, muxb_sel=MXCU_MUXB_SEL.R0, muxa_sel=MXCU_MUXA_SEL.R0, pos=0):
         '''Set the IMEM index at integer pos to the configuration parameters.
         See MXCU_IMEM_WORD initializer for implementation details.
         NOTE: vwr_row_we should be an 4-element array of bool/int values representing a one-hot vector of row write enable bits
@@ -135,7 +135,6 @@ class MXCU_IMEM:
             print("No ALU operation")
         else:
             print("Performing ALU operation {0} between operands {1} and {2}".format(alu_opcode, muxa_res, muxb_res))
-        
         if rf_we == 1:
             print("Writing ALU result to MXCU register {0}".format(rf_wsel))
         else:
@@ -150,7 +149,7 @@ class MXCU_IMEM:
     
         
 class MXCU_IMEM_WORD:
-    def __init__(self, vwr_row_we=[0,0,0,0], vwr_sel=0, srf_sel=0, alu_srf_write=0, srf_we=0, rf_wsel=0, rf_we=0, alu_op=0, muxb_sel=0, muxa_sel=0):
+    def __init__(self, vwr_row_we=[0,0,0,0], vwr_sel=MXCU_VWR_SEL.VWR_A, srf_sel=0, alu_srf_write=ALU_SRF_WRITE.LCU, srf_we=0, rf_wsel=0, rf_we=0, alu_op=MXCU_ALU_OPS.NOP, muxb_sel=MXCU_MUXB_SEL.R0, muxa_sel=MXCU_MUXA_SEL.R0):
         '''Generate a binary mxcu instruction word from its configuration paramerers:
         
            -   vwr_row_we: One-hot encoded write enable to the 4 rows (also known as slices) of the VWR.

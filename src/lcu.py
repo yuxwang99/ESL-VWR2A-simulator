@@ -70,7 +70,7 @@ class LCU_IMEM:
         '''Set the IMEM index at integer pos to the binary imem word'''
         self.IMEM[pos] = np.binary_repr(kmem_word,width=LCU_IMEM_WIDTH)
     
-    def set_params(self, imm=0, rf_wsel=0, rf_we=0, alu_op=LCU_ALU_OPS.NOP, br_mode=0, muxb_sel=LCU_MUXB_SEL.R0, muxa_sel=LCU_MUXB_SEL.R0, pos=0):
+    def set_params(self, imm=0, rf_wsel=0, rf_we=0, alu_op=LCU_ALU_OPS.NOP, br_mode=0, muxb_sel=LCU_MUXB_SEL.R0, muxa_sel=LCU_MUXA_SEL.R0, pos=0):
         '''Set the IMEM index at integer pos to the configuration parameters.
         See LCU_IMEM_WORD initializer for implementation details.
         '''
@@ -130,7 +130,7 @@ class LCU_IMEM:
     
         
 class LCU_IMEM_WORD:
-    def __init__(self, imm=0, rf_wsel=0, rf_we=0, alu_op=0, br_mode=0, muxb_sel=0, muxa_sel=0):
+    def __init__(self, imm=0, rf_wsel=0, rf_we=0, alu_op=LCU_ALU_OPS.NOP, br_mode=0, muxb_sel=LCU_MUXB_SEL.R0, muxa_sel=LCU_MUXA_SEL.R0):
         '''Generate a binary lcu instruction word from its configuration paramerers:
         
            -   imm: Immediate value to use for ALU operations or address to branch to

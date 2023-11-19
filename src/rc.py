@@ -90,7 +90,7 @@ class RC_IMEM:
         '''Set the IMEM index at integer pos to the binary imem word'''
         self.IMEM[pos] = np.binary_repr(kmem_word,width=RC_IMEM_WIDTH)
     
-    def set_params(self, rf_wsel, rf_we, muxf_sel, alu_op, op_mode, muxb_sel, muxa_sel, pos):
+    def set_params(self, rf_wsel=0, rf_we=0, muxf_sel=RC_MUXF_SEL.OWN, alu_op=RC_ALU_OPS.NOP, op_mode=0, muxb_sel=RC_MUXB_SEL.VWR_A, muxa_sel=RC_MUXA_SEL.VWR_A, pos=0):
         '''Set the IMEM index at integer pos to the configuration parameters.
         See RC_IMEM_WORD initializer for implementation details.
         '''
@@ -147,7 +147,7 @@ class RC_IMEM:
     
         
 class RC_IMEM_WORD:
-    def __init__(self, rf_wsel=0, rf_we=0, muxf_sel=0, alu_op=0, op_mode=0, muxb_sel=0, muxa_sel=0):
+    def __init__(self, rf_wsel=0, rf_we=0, muxf_sel=RC_MUXF_SEL.OWN, alu_op=RC_ALU_OPS.NOP, op_mode=0, muxb_sel=RC_MUXB_SEL.VWR_A, muxa_sel=RC_MUXA_SEL.VWR_A):
         '''Generate a binary lsu instruction word from its configuration paramerers:
         
            -   rf_wsel: Select one of eight RC registers to write to
