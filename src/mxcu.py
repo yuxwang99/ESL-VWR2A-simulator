@@ -103,7 +103,6 @@ class MXCU_IMEM:
         imem_word = MXCU_IMEM_WORD()
         imem_word.set_word(self.IMEM[pos])
         vwr_row_we, vwr_sel, srf_sel, alu_srf_write, srf_we, rf_wsel, rf_we, alu_op, muxb_sel, muxa_sel = imem_word.decode_word()
-        
         for vwr in MXCU_VWR_SEL:
             if vwr.value == vwr_sel:
                 selected_vwr = vwr.name

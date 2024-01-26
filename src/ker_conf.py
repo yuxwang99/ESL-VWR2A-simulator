@@ -32,6 +32,7 @@ class KER_CONF:
         
         assert (pos>0), "Kernel word 0 is reserved; need to pick a position >0 and <16"
         assert (num_instructions>0) & (num_instructions<64), "Invalid kernel; number of instructions is either negative or too big"
+        assert (column_usage>0), "The column attribute must be one-hot encoded"
         
         # Note: The number of instructions encoded in the kmem word is always one less than the actual number of instructions
         n_instr_kmem = num_instructions-1
