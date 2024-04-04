@@ -19,5 +19,5 @@ First, the filter coefficients of the CGRA are written to an SPM bank, whose ind
 
 ## Examples of applications using this kernel
 
-* [FIR filter example](https://eslgit.epfl.ch/esl/architectures-and-systems/accelerators/cgra/vwr2a_kernel_examples/fir_filter/src/fir_filter.c)
+* [FIR filter example](https://eslgit.epfl.ch/esl/architectures-and-systems/accelerators/cgra/vwr2a_kernel_examples/-/tree/main/fir_filter/src/fir_filter.c)
 
