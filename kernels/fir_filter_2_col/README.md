@@ -2,7 +2,7 @@
 
 ## Kernel description
 
-This kernel uses both kernels of VWR2A to run a Finite Impulse Response (FIR) filter on the input data.
+This kernel uses both columns of VWR2A to run a Finite Impulse Response (FIR) filter on the input data.
 
 ## Kernal usage
 
