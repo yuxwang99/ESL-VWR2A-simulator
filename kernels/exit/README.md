@@ -9,6 +9,9 @@ Very simple kernel that just starts a VWR2A kernel and then immediately exits ou
 Inputs:
 * None
 
+SRF Initialization:
+* None
+
 Outputs:
 * None
 

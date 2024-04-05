@@ -14,6 +14,9 @@ Inputs:
     * The next FFT_SIZE/2 values are the real weights
     * The final FFT_SIZE/2 values are the imaginary weights
 
+SRF Initialization:
+* Whoever figures out how this kernel works, please update the README here :)
+
 Outputs:
 * The FFT result vector whose length is FFT_SIZE
 
@@ -24,6 +27,6 @@ Whoever figures out how this kernel works, please update the README here :)
 ## Examples of applications using this kernel
 
 * [HEEP-Alive FFT test](https://github.com/esl-epfl/heepalive-imec/blob/master/sw/applications/dsip_fft/dsip_fft.c)
-* [Respiration feature extraction](https://eslgit.epfl.ch/esl/architectures-and-systems/accelerators/cgra/vwr2a_kernel_examples/rsp_features_extraction/src/rsp_features.c)
-* [FFT test](https://eslgit.epfl.ch/esl/architectures-and-systems/accelerators/cgra/vwr2a_kernel_examples/fft/src/rsp_fft.c)
-* [Biosignal monitoring](https://eslgit.epfl.ch/esl/architectures-and-systems/accelerators/cgra/vwr2a_kernel_examples/biosignal_monitoring_cgra/src/rsp.c)
+* [Respiration feature extraction](https://eslgit.epfl.ch/esl/architectures-and-systems/accelerators/cgra/vwr2a_kernel_examples/-/tree/main/rsp_features_extraction/src/rsp_features.c)
+* [FFT test](https://eslgit.epfl.ch/esl/architectures-and-systems/accelerators/cgra/vwr2a_kernel_examples/-/tree/main/fft/src/rsp_fft.c)
+* [Biosignal monitoring](https://eslgit.epfl.ch/esl/architectures-and-systems/accelerators/cgra/vwr2a_kernel_examples/-/tree/main/biosignal_monitoring_cgra/src/rsp.c)

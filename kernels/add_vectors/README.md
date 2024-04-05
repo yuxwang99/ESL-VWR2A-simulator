@@ -9,8 +9,12 @@ Perform element-wise addition of two vectors
 Inputs:
 * Two 128-element vectors
 
+SRF Initialization:
+* None
+
 Outputs:
 * One 128-element vector
+
 
 ## Implementation details
 
