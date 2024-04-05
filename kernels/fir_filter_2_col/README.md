@@ -12,20 +12,20 @@ Inputs:
 
 SRF Initialization:
 * Column 0:
-    0. Index of the "taps" in the SPM banks
-    1. Index of the data in the SPM banks in which the input data is written and the output result is read
-    2. (Presumably) the SPM index loaded with the previous window of data to initialize the filter
-    3. Number of filter taps
-    4. Number of filtering iterations, which is the data input size divided by the VWR size divided by two (for the two columns)
-    5. A bit shift of 15 (assuming 16-bit input samples, since the CGRA works with 32-bit data)
+    * [0]: Index of the "taps" in the SPM banks
+    * [1]: Index of the data in the SPM banks in which the input data is written and the output result is read
+    * [2]: (Presumably) the SPM index loaded with the previous window of data to initialize the filter
+    * [3]: Number of filter taps
+    * [4]: Number of filtering iterations, which is the data input size divided by the VWR size divided by two (for the two columns)
+    * [5]: A bit shift of 15 (assuming 16-bit input samples, since the CGRA works with 32-bit data)
 * Column 1:
-    0. Index of the "taps" in the SPM banks
-    1. Index of the data in the SPM banks in which the input data is written and the output result is read
-    2. (Presumably) the SPM index loaded with the previous window of data to initialize the filter
-    3. Number of filter taps
-    4. Number of filtering iterations, which is the data input size divided by the VWR size divided by two (for the two columns)
-    5. A bit shift of 15 (assuming 16-bit input samples, since the CGRA works with 32-bit data)
-    6. The index of an array of zeros written into the SPM
+    * [0]: Index of the "taps" in the SPM banks
+    * [1]: Index of the data in the SPM banks in which the input data is written and the output result is read
+    * [2]: (Presumably) the SPM index loaded with the previous window of data to initialize the filter
+    * [3]: Number of filter taps
+    * [4]: Number of filtering iterations, which is the data input size divided by the VWR size divided by two (for the two columns)
+    * [5]: A bit shift of 15 (assuming 16-bit input samples, since the CGRA works with 32-bit data)
+    * [6]: The index of an array of zeros written into the SPM
 
 Outputs:
 * The filtered vector (same size as the input vector)
