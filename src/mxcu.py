@@ -100,14 +100,16 @@ class MXCU_IMEM:
     
     def get_instruction_info(self, pos):
         '''Print the human-readable instructions of the instruction at position pos in the instruction memory'''
+        
         imem_word = MXCU_IMEM_WORD()
         imem_word.set_word(self.IMEM[pos])
         vwr_row_we, vwr_sel, srf_sel, alu_srf_write, srf_we, rf_wsel, rf_we, alu_op, muxb_sel, muxa_sel = imem_word.decode_word()
         for vwr in MXCU_VWR_SEL:
             if vwr.value == vwr_sel:
                 selected_vwr = vwr.name
+        print(f"{pos} ====================================")
         
-        indices_of_written_rows = np.where(vwr_row_we[::-1])[0]
+        indices_of_written_rows = np.where(vwr_row_we)[0]
         if len(indices_of_written_rows)>0:
             print("Writing to VWR rows {0} of {1}".format(indices_of_written_rows, selected_vwr))
         else:
