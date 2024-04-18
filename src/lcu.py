@@ -83,6 +83,7 @@ class LCU_IMEM:
         imem_word.set_word(self.IMEM[pos])
         imm, rf_wsel, rf_we, alu_op, br_mode, muxb_sel, muxa_sel = imem_word.decode_word()
         
+        print(f"{pos}: ==============================")
         print("Immediate value: {0}".format(imm))
         
         if br_mode == 1:

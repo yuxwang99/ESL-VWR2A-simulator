@@ -106,6 +106,8 @@ class MXCU_IMEM:
         for vwr in MXCU_VWR_SEL:
             if vwr.value == vwr_sel:
                 selected_vwr = vwr.name
+                
+        print(f"{pos}: ==============================")
         
         indices_of_written_rows = np.where(vwr_row_we[::-1])[0]
         if len(indices_of_written_rows)>0:

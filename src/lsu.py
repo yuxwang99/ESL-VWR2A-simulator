@@ -109,6 +109,7 @@ class LSU_IMEM:
         imem_word.set_word(self.IMEM[pos])
         rf_wsel, rf_we, alu_op, muxb_sel, muxa_sel, vwr_shuf_op, vwr_shuf_sel = imem_word.decode_word()
         
+        print(f"{pos}: ==============================")
         # See if we are performing a load/store or a shuffle
         for op in LSU_OP_MODE:
             if op.value == vwr_shuf_sel:
